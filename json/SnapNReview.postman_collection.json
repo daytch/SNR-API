@@ -1,0 +1,540 @@
+{
+	"info": {
+		"_postman_id": "307ac572-b15b-4a44-9fd5-d100eea9c3d3",
+		"name": "SnapNReview",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "updateCategory",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"categoryName\": \"update category\",\r\n    \"isParent\": 0,\r\n    \"parentCategoryId\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/admin/updateCategory",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"updateCategory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "insertCategory",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"categoryName\": \"add new category\",\r\n    \"isParent\": 0,\r\n    \"parentCategoryId\": \"NULL\",\r\n    \"iconUrl\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/admin/insertCategory",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"insertCategory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllParentCategory",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/user/getAllParentCategory",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"getAllParentCategory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllSubCategory",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/getAllSubCategory",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"getAllSubCategory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getSubCategoryByParentId?parentId=6",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/user/getSubCategoryByParentId?parentId=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"getSubCategoryByParentId"
+					],
+					"query": [
+						{
+							"key": "parentId",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteCategory",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"categoryName\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/admin/deleteCategory",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"deleteCategory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/register Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"fauzi@pito.com.sg\",\r\n    \"password\" : \"@PitoDev123\",\r\n    \"name\" : \"fauzi PITO\",\r\n    \"token\" : \"initesktokenIOS\", \"type\" : \"ios\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/login Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\" : \"fauzi@pito.com.sg\", \"password\" : \"@PitoDev123\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/loginSSO Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"fauzi@gmail.com\",\r\n    \"name\" : \"Fauzi Token SSO\",\r\n    \"source\" : \"fb\",\r\n    \"img_avatar\" : \"http://localhost/img_tes/fauzi.jpg\",\r\n    \"token\" : \"initesktokenAD\", \"type\" : \"android\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/loginSSO",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"loginSSO"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "insertProduct",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJVc2VyIiwiaWF0IjoxNjE2ODcyMDU2LCJleHAiOjE2MTk0NjQwNTZ9._uEuoVXhhaSfD1tb5ld191DCNG4kB_jYj4t4mXlnqCc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"categoryId\" : 5,\r\n    \"productName\": \"Mouse Razer\",\r\n    \"isAnonymous\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/insertProduct",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"insertProduct"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "count view Product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJVc2VyIiwiaWF0IjoxNjE2OTExNTY4LCJleHAiOjE2MTk1MDM1Njh9.xxQFqVdjpIy9EiZjILIKvCuAbKXOc_yzYgBqXXMnNFs",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_local}}/user/countViewProduct",
+					"host": [
+						"{{url_local}}"
+					],
+					"path": [
+						"user",
+						"countViewProduct"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "count upvote product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJVc2VyIiwiaWF0IjoxNjE2OTExNTY4LCJleHAiOjE2MTk1MDM1Njh9.xxQFqVdjpIy9EiZjILIKvCuAbKXOc_yzYgBqXXMnNFs",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productId\":\"1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_local}}/user/countUpvoteProduct",
+					"host": [
+						"{{url_local}}"
+					],
+					"path": [
+						"user",
+						"countUpvoteProduct"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all product",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJVc2VyIiwiaWF0IjoxNjE2OTExNTY4LCJleHAiOjE2MTk1MDM1Njh9.xxQFqVdjpIy9EiZjILIKvCuAbKXOc_yzYgBqXXMnNFs",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"categoryId\":5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_local}}/user/getAllProduct",
+					"host": [
+						"{{url_local}}"
+					],
+					"path": [
+						"user",
+						"getAllProduct"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Insert Review",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJVc2VyIiwiaWF0IjoxNjE2OTExNTY4LCJleHAiOjE2MTk1MDM1Njh9.xxQFqVdjpIy9EiZjILIKvCuAbKXOc_yzYgBqXXMnNFs",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\":\"Worted!!\",\r\n    \"rate\" : 5,\r\n    \"productId\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_local}}/user/insertReview",
+					"host": [
+						"{{url_local}}"
+					],
+					"path": [
+						"user",
+						"insertReview"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getl all review by product id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJVc2VyIiwiaWF0IjoxNjE2OTExNTY4LCJleHAiOjE2MTk1MDM1Njh9.xxQFqVdjpIy9EiZjILIKvCuAbKXOc_yzYgBqXXMnNFs",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productId\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_local}}/user/getAllReviewbyProduct",
+					"host": [
+						"{{url_local}}"
+					],
+					"path": [
+						"user",
+						"getAllReviewbyProduct"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "count view review",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJVc2VyIiwiaWF0IjoxNjE2OTExNTY4LCJleHAiOjE2MTk1MDM1Njh9.xxQFqVdjpIy9EiZjILIKvCuAbKXOc_yzYgBqXXMnNFs",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"reviewId\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_local}}/user/countViewReview",
+					"host": [
+						"{{url_local}}"
+					],
+					"path": [
+						"user",
+						"countViewReview"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "count upvote review",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJVc2VyIiwiaWF0IjoxNjE2OTExNTY4LCJleHAiOjE2MTk1MDM1Njh9.xxQFqVdjpIy9EiZjILIKvCuAbKXOc_yzYgBqXXMnNFs",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"reviewId\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_local}}/user/countViewReview",
+					"host": [
+						"{{url_local}}"
+					],
+					"path": [
+						"user",
+						"countViewReview"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
