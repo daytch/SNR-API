@@ -13,8 +13,8 @@ app.use('/Img', express.static(__dirname+'/Img'))
 // app.use('/Img', express.static(__dirname+'/img'))
 // app.use('/image', express.static('img'))
 // app.use('/image', express.static(__dirname+'/image'))
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+app.use(bodyParser.json({limit: '50mb'}));
 
 var routes = require('./routes');
 routes(app);

@@ -119,9 +119,11 @@ exports.getAllQuestion = async (param) => {
     que += ` AND questions.questionName LIKE '%` + param.search + `%' `;
   }
   var queryCount = " SELECT COUNT(*) as total FROM ( " + que + ")countTable ";
+  
   switch (param.order) {
     case "views":
-      que += " ORDER by questions.views DESC ";
+      
+      que += " ORDER by views DESC ";
       break;
     case "answers":
       que += " ORDER by countAnswer.countedAnswer DESC ";
@@ -133,6 +135,7 @@ exports.getAllQuestion = async (param) => {
   que += " LIMIT " + param.skip + ", " + param.take;
   var rows = await query(que);
   var countRows = await query(queryCount);
+  console.log(que)
   rows.total = countRows[0].total;
   return rows;
 };

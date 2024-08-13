@@ -1,9 +1,9 @@
 const conf = {
-    host: 'smtp.office365.com',
+    host: 'mail.nurulhidayat.com',
     port: 587,
     auth: {
-       user: 'victor.simamora@outlook.com',
-       pass: 'Victo512*'
+       user: 'admin_snr@nurulhidayat.com',
+       pass: 'BuruanCair40%'
     },
     tls: { 
         rejectUnauthorized: false 

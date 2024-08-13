@@ -35,16 +35,14 @@ exports.uploadImage = async (param,res)=>{
                 });
             }
             var userId = param.userId;
-            var {type} = files.image;
+            var type = fields.type;
             if (userId === undefined || userId == "") {
-                console.log("First upload")
                 return res.status(200).json({
                     isSuccess: false,
                     message: "Failed to get profile, please relogin"
                 });
             }
             if (type === undefined || type == "") {
-                console.log("Second upload")
                 return res.status(200).json({
                     isSuccess: false,
                     message: "There Are something Wrong in Our System"
@@ -71,6 +69,6 @@ exports.uploadImage = async (param,res)=>{
 
     }
     catch(error){
-        return res.status(200).json(responseHelper.FailWithMessage(error.message));
+        return res.status(200).json(responseHelper.Fail());
     }
 }

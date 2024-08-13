@@ -1,23 +1,22 @@
-const review = require("../model/review");
+const review = require('../model/review');
 const {
   notificationWriteReview,
   notificationNotifyPostReview,
-} = require("./notification.ctrl");
-const responseHelper = require("../helper/response.helper");
-const notification = require("./notification.ctrl");
-const { uploadfile } = require("../middlewares");
-const formidable = require("formidable");
-const conf = require("../config/upload.config");
+} = require('./notification.ctrl');
+const responseHelper = require('../helper/response.helper');
+const notification = require('./notification.ctrl');
+const { uploadfile } = require('../middlewares');
+const formidable = require('formidable');
+const conf = require('../config/upload.config');
 
 exports.insertReview = async (param, res) => {
   var req = param.body;
   req.userId = param.userId;
-  console.log(req);
 
-  if (req.userId == undefined || req.userId == "") {
+  if (req.userId == undefined || req.userId == '') {
     return res.status(200).json({
       isSuccess: false,
-      message: "Failed to get profile, please relogin",
+      message: 'Failed to get profile, please relogin',
     });
   }
   var ins = await review.insertReview(req);
@@ -28,15 +27,14 @@ exports.insertReview = async (param, res) => {
       fromUserId: req.userId,
       productId: req.productId,
     });
-    console.log("insert success");
     return res.status(200).json({
       isSuccess: true,
-      message: "Success insert data",
+      message: 'Success insert data',
     });
   } else {
     return res.status(200).json({
       isSuccess: false,
-      message: "Failed insert data",
+      message: 'Failed insert data',
     });
   }
 };
@@ -48,17 +46,17 @@ exports.insertReviewWithImages = async (param, res) => {
     var form = new formidable.IncomingForm();
     form.parse(param, async (err, fields, files) => {
       if (err) {
-        console.error("Error", err);
+        console.error('Error', err);
         return res.status(200).json({
           isSuccess: false,
-          message: "Failed to insert review",
+          message: 'Failed to insert review',
         });
       }
       var userId = param.userId;
-      if (userId === undefined || userId == "") {
+      if (userId === undefined || userId == '') {
         return res.status(200).json({
           isSuccess: false,
-          message: "Failed to get profile, please relogin",
+          message: 'Failed to get profile, please relogin',
         });
       }
 
@@ -93,7 +91,7 @@ exports.insertReviewWithImages = async (param, res) => {
 
       //check image1
 
-      if (files.image1 !== undefined && files.image1 != "") {
+      if (files.image1 !== undefined && files.image1 != '') {
         var image1 = await createImageUrl(
           files.image1,
           fields.category,
@@ -110,7 +108,7 @@ exports.insertReviewWithImages = async (param, res) => {
           imageUrls.push(image1.filename);
         }
       }
-      if (files.image2 !== undefined && files.image2 != "") {
+      if (files.image2 !== undefined && files.image2 != '') {
         var image2 = await createImageUrl(
           files.image2,
           fields.category,
@@ -122,12 +120,11 @@ exports.insertReviewWithImages = async (param, res) => {
             message: image2.message,
           });
         }
-        console.log(image2);
         if (!image2.imageNull) {
           imageUrls.push(image2.filename);
         }
       }
-      if (files.image3 !== undefined && files.image3 != "") {
+      if (files.image3 !== undefined && files.image3 != '') {
         var image3 = await createImageUrl(
           files.image3,
           fields.category,
@@ -143,7 +140,7 @@ exports.insertReviewWithImages = async (param, res) => {
           imageUrls.push(image3.filename);
         }
       }
-      if (files.image4 !== undefined && files.image4 != "") {
+      if (files.image4 !== undefined && files.image4 != '') {
         var image4 = await createImageUrl(
           files.image4,
           fields.category,
@@ -159,7 +156,7 @@ exports.insertReviewWithImages = async (param, res) => {
           imageUrls.push(image4.filename);
         }
       }
-      if (files.image5 !== undefined && files.image5 != "") {
+      if (files.image5 !== undefined && files.image5 != '') {
         var image5 = await createImageUrl(
           files.image5,
           fields.category,
@@ -175,7 +172,7 @@ exports.insertReviewWithImages = async (param, res) => {
           imageUrls.push(image5.filename);
         }
       }
-      if (files.image6 !== undefined && files.image6 != "") {
+      if (files.image6 !== undefined && files.image6 != '') {
         var image6 = await createImageUrl(
           files.image6,
           fields.category,
@@ -191,7 +188,7 @@ exports.insertReviewWithImages = async (param, res) => {
           imageUrls.push(image6.filename);
         }
       }
-      if (files.image7 !== undefined && files.image7 != "") {
+      if (files.image7 !== undefined && files.image7 != '') {
         var image7 = await createImageUrl(
           files.image7,
           fields.category,
@@ -207,7 +204,7 @@ exports.insertReviewWithImages = async (param, res) => {
           imageUrls.push(image7.filename);
         }
       }
-      if (files.image8 !== undefined && files.image8 != "") {
+      if (files.image8 !== undefined && files.image8 != '') {
         var image8 = await createImageUrl(
           files.image8,
           fields.category,
@@ -223,7 +220,7 @@ exports.insertReviewWithImages = async (param, res) => {
           imageUrls.push(image8.filename);
         }
       }
-      if (files.image9 !== undefined && files.image9 != "") {
+      if (files.image9 !== undefined && files.image9 != '') {
         var image9 = await createImageUrl(
           files.image9,
           fields.category,
@@ -239,7 +236,7 @@ exports.insertReviewWithImages = async (param, res) => {
           imageUrls.push(image9.filename);
         }
       }
-      if (files.image10 !== undefined && files.image10 != "") {
+      if (files.image10 !== undefined && files.image10 != '') {
         var image10 = await createImageUrl(
           files.image10,
           fields.category,
@@ -255,8 +252,6 @@ exports.insertReviewWithImages = async (param, res) => {
           imageUrls.push(image10.filename);
         }
       }
-      // console.log(imageUrls);
-      // console.log("image URL")
       if (imageUrls.length > 0) {
         ins = await review.insertReviewImages(ins.insertId, imageUrls);
       }
@@ -264,13 +259,13 @@ exports.insertReviewWithImages = async (param, res) => {
       if (ins.affectedRows > 0) {
         return res.status(200).json({
           isSuccess: true,
-          message: "Success",
+          message: 'Success',
           // files: files
         });
       } else {
         return res.status(200).json({
           isSuccess: false,
-          message: "There Are something Wrong in Our System",
+          message: 'There Are something Wrong in Our System',
           // files: files
         });
       }
@@ -278,7 +273,7 @@ exports.insertReviewWithImages = async (param, res) => {
   } catch (error) {
     return res.status(200).json({
       isSuccess: false,
-      message: "There Are something Wrong in Our System",
+      message: 'There Are something Wrong in Our System',
       messageError: error.message,
     });
   }
@@ -292,25 +287,26 @@ exports.getAllReviewReports = async (param, res) => {
   } catch (error) {
     return res.status(200).json({
       isSuccess: false,
-      message: "There Are Something Wrong in Our System",
+      message: 'There Are Something Wrong in Our System',
     });
   }
 };
 exports.getAllReviewbyProduct = async (param, res) => {
   var rtn = {};
   try {
+    param.body.userId = param.userId
     var items = await review.getAllReviewbyProduct(param.body);
 
     status = 200;
     rtn.isSuccess = true;
-    rtn.message = "Success";
+    rtn.message = 'Success';
     rtn.data = items;
     rtn.total = items.total;
     return res.status(status).json(rtn);
   } catch (error) {
     (rtn.isSuccess = false), (rtn.status = 200);
-    rtn.message = "There Are Something Wrong in Our System";
-    return res.status(200).json(rtn);
+    rtn.message = 'There Are Something Wrong in Our System';
+    return res.status(200).json(error.message);
   }
 };
 
@@ -318,37 +314,36 @@ exports.countViewReview = async (param, res) => {
   try {
     var req = param.body;
     req.userId = param.userId;
-    if (req.userId == undefined || req.userId == "") {
+    if (req.userId == undefined || req.userId == '') {
       return res.status(200).json({
         isSuccess: false,
-        message: "Failed to get profile, please relogin",
+        message: 'Failed to get profile, please relogin',
       });
     }
     var countedView = await review.findCountedViewReview(req);
     if (countedView.length > 0) {
       return res.status(200).json({
         isSuccess: true,
-        message: "Already Vote",
+        message: 'Already Vote',
       });
     } else {
-      var ins = await review.countView(req);
+      var ins = await review.insertReviewView(req);
       if (ins.affectedRows > 0) {
         return res.status(200).json({
           isSuccess: true,
-          message: "Success insert data",
+          message: 'Success insert data',
         });
       } else {
         return res.status(200).json({
           isSuccess: false,
-          message: "Failed insert data",
+          message: 'Failed insert data',
         });
       }
     }
   } catch (error) {
-    console.log(error.message);
     return res.status(200).json({
       isSuccess: false,
-      message: "Failed to insert data",
+      message: 'Failed to insert data',
     });
   }
 };
@@ -357,26 +352,28 @@ exports.countviewComment = async (param, res) => {
   try {
     var req = param.body;
     req.userId = param.userId;
-    if (req.userId == undefined || req.userId == "") {
+    if (req.userId == undefined || req.userId == '') {
       return res.status(200).json({
         isSuccess: false,
-        message: "Failed to get profile, please relogin",
+        message: 'Failed to get profile, please relogin',
       });
     }
     var ins = await review.countViewComment(req);
     if (ins.affectedRows > 0) {
       return res.status(200).json({
         isSuccess: true,
-        message: "Success insert data",
+        message: 'Success insert data',
       });
     } else {
       return res.status(200).json({
         isSuccess: false,
-        message: "Failed insert data",
+        message: 'Failed insert data',
       });
     }
   } catch (error) {
-    console.log(error.message);
+    return res
+      .status(500)
+      .json({ isSuccess: false, message: 'Failed to insert data' });
   }
 };
 
@@ -385,10 +382,10 @@ exports.countUpvoteReview = async (param, res) => {
   req.userId = param.userId;
   var req = param.body;
   req.userId = param.userId;
-  if (req.userId == undefined || req.userId == "") {
+  if (req.userId == undefined || req.userId == '') {
     return res.status(200).json({
       isSuccess: false,
-      message: "Failed to get profile, please relogin",
+      message: 'Failed to get profile, please relogin',
     });
   }
   var hasCounted = await review.isUserhasCountedvote(req);
@@ -397,12 +394,13 @@ exports.countUpvoteReview = async (param, res) => {
     if (del.affectedRows > 0) {
       return res.status(200).json({
         isSuccess: true,
-        message: "Success insert data",
+        message: 'Success insert data',
+        isUpvoted: false,
       });
     } else {
       return res.status(200).json({
         isSuccess: false,
-        message: "Failed insert data",
+        message: 'Failed insert data',
       });
     }
   } else {
@@ -413,12 +411,13 @@ exports.countUpvoteReview = async (param, res) => {
       });
       return res.status(200).json({
         isSuccess: true,
-        message: "Success insert data",
+        message: 'Success insert data',
+        isUpvoted: true,
       });
     } else {
       return res.status(200).json({
         isSuccess: false,
-        message: "Failed insert data",
+        message: 'Failed insert data',
       });
     }
   }
@@ -429,56 +428,70 @@ exports.countUpvoteReviewComment = async (param, res) => {
   req.userId = param.userId;
   var req = param.body;
   req.userId = param.userId;
-  if (req.userId == undefined || req.userId == "") {
-    return res.status(200).json({
-      isSuccess: false,
-      message: "Failed to get profile, please relogin",
-    });
-  }
-  var hasCounted = await review.isUserhasCountedvoteReviewComment(req);
-  if (hasCounted.length > 0) {
-    var del = await review.deleteCountedVoteReviewComment(hasCounted[0].id)
-    if(del.affectedRows>0){
-      return res.status(200).json({
-        isSuccess: true,
-        message: "Success insert data"
-      })
-    }
-    return res.status(200).json({
-      isSuccess: false,
-      message: "user has been voted",
-    });
-  } else {
-    var ins = await review.countUpvoteReviewComment(req);
-    if (ins.affectedRows > 0) {
-      // notification.notificationReviewUpvote(req);
-      return res.status(200).json({
-        isSuccess: true,
-        message: "Success insert data",
-      });
-    } else {
+  try {
+    if (req.userId == undefined || req.userId == '') {
       return res.status(200).json({
         isSuccess: false,
-        message: "Failed insert data",
+        message: 'Failed to get profile, please relogin',
       });
     }
+    var hasCounted = await review.isUserhasCountedvoteReviewComment(req);
+    if (hasCounted.length > 0) {
+      var del = await review.deleteCountedVoteReviewComment(hasCounted[0].id);
+      if (del.affectedRows > 0) {
+        return res.status(200).json({
+          isSuccess: true,
+          message: 'Success insert data',
+          isUpvoted: false,
+        });
+      }
+      return res.status(200).json({
+        isSuccess: false,
+        message: 'user has been voted',
+      });
+    } else {
+      var ins = await review.countUpvoteReviewComment(req);
+      if (ins.affectedRows > 0) {
+        // notification.notificationReviewUpvote(req);
+        return res.status(200).json({
+          isSuccess: true,
+          message: 'Success insert data',
+          isUpvoted: true
+        });
+      } else {
+        return res.status(200).json({
+          isSuccess: false,
+          message: 'Failed insert data',
+        });
+      }
+    }
+  } catch (error) {
+    return res.status(500).json({ isSuccess: false, message: error.message });
   }
 };
 
 exports.GetallReviewComments = async (param, res) => {
   var rtn = {};
   try {
+    var req = param.body;
+    req.userId = param.userId;
+    if (req.userId == undefined || req.userId == '') {
+      return res.status(200).json({
+        isSuccess: false,
+        message: 'Failed to get profile, please relogin',
+      });
+    }
     var items = await review.GetallReviewComments(param.body);
     rtn = {
       data: items,
       total: items.total,
       isSuccess: true,
-      message: "Success",
+      message: 'Success',
     };
     return res.status(200).json(rtn);
   } catch (error) {
     (rtn.isSuccess = false), (rtn.status = 200);
-    rtn.message = "There Are somethign Wrong in Our System" + error;
+    rtn.message = 'There Are somethign Wrong in Our System' + error;
     return res.status(200).json(rtn);
   }
 };
@@ -487,10 +500,10 @@ exports.insertReport = async (param, res) => {
   try {
     req = param.body;
     req.userId = param.userId;
-    if (req.userId == undefined || req.userId == "") {
+    if (req.userId == undefined || req.userId == '') {
       return res.status(200).json({
         isSuccess: false,
-        message: "Failed to get profile, please relogin",
+        message: 'Failed to get profile, please relogin',
       });
     }
     var item = await review.insertReport(req);
@@ -501,12 +514,11 @@ exports.insertReport = async (param, res) => {
         .status(200)
         .json(
           responseHelper.FailWithMessage(
-            "Failed to report data, please contact Administrator !"
+            'Failed to report data, please contact Administrator !'
           )
         );
     }
   } catch (error) {
-    console.log(error.message);
     return res.status(200).json(responseHelper.Fail());
   }
 };
@@ -516,7 +528,6 @@ exports.getAllReviewReported = async (param, res) => {
     var item = await review.getAllReviewReported(param.body);
     return res.status(200).json(responseHelper.Success(item));
   } catch (error) {
-    console.log(error.message);
     return res.status(200).json(responseHelper.Fail());
   }
 };
@@ -531,11 +542,10 @@ exports.disableReview = async (param, res) => {
       .status(200)
       .json(
         responseHelper.FailWithMessage(
-          "Failed to update, please contact Administrator !"
+          'Failed to update, please contact Administrator !'
         )
       );
   } catch (error) {
-    console.log(error.message);
     return res.status(200).json(responseHelper.Fail());
   }
 };
@@ -544,10 +554,10 @@ exports.reportReviewComment = async (param, res) => {
   try {
     var req = param.body;
     req.userId = param.userId;
-    if (req.userId == undefined || req.userId == "") {
+    if (req.userId == undefined || req.userId == '') {
       return res.status(200).json({
         isSuccess: false,
-        message: "Failed to get profile, please relogin",
+        message: 'Failed to get profile, please relogin',
       });
     }
     var item = await review.reportReviewComment(req);
@@ -558,11 +568,10 @@ exports.reportReviewComment = async (param, res) => {
       .status(200)
       .json(
         responseHelper.FailWithMessage(
-          "Failed to report comment, please contact Administrator !"
+          'Failed to report comment, please contact Administrator !'
         )
       );
   } catch (error) {
-    console.log(error.message);
     return res.status(200).json(responseHelper.Fail());
   }
 };
@@ -571,10 +580,10 @@ exports.insertComment = async (param, res) => {
   try {
     var req = param.body;
     req.userId = param.userId;
-    if (req.userId == undefined || req.userId == "") {
+    if (req.userId == undefined || req.userId == '') {
       return res.status(200).json({
         isSuccess: false,
-        message: "Failed to get profile, please relogin",
+        message: 'Failed to get profile, please relogin',
       });
     }
     var ins = await review.inserReviewComment(req);
@@ -588,11 +597,10 @@ exports.insertComment = async (param, res) => {
       .status(200)
       .json(
         responseHelper.FailWithMessage(
-          "Failed to inser comment on review, please contact Administrator.!"
+          'Failed to inser comment on review, please contact Administrator.!'
         )
       );
   } catch (error) {
-    console.log(error.message);
     return res.status(200).json(responseHelper.Fail());
   }
 };
@@ -607,11 +615,10 @@ exports.disableReviewComment = async (param, res) => {
       .status(200)
       .json(
         responseHelper.FailWithMessage(
-          "Faile to disable comment, please contact Administrator !"
+          'Faile to disable comment, please contact Administrator !'
         )
       );
   } catch (error) {
-    console.log(error.message);
     return res.status(200).json(responseHelper.Fail());
   }
 };
@@ -626,11 +633,10 @@ exports.enableReviewComment = async (param, res) => {
       .status(200)
       .json(
         responseHelper.FailWithMessage(
-          "Faile to enable comment, please contact Administrator !"
+          'Faile to enable comment, please contact Administrator !'
         )
       );
   } catch (error) {
-    console.log(error.message);
     return res.status(200).json(responseHelper.Fail());
   }
 };
@@ -645,11 +651,10 @@ exports.enableReview = async (param, res) => {
       .status(200)
       .json(
         responseHelper.FailWithMessage(
-          "Faile to enable review, please contact Administrator !"
+          'Faile to enable review, please contact Administrator !'
         )
       );
   } catch (error) {
-    console.log(error.message);
     return res.status(200).json(responseHelper.Fail());
   }
 };
@@ -659,22 +664,21 @@ exports.getAllReviewCommentsReported = async (param, res) => {
     var item = await review.getAllReviewCommentsReported(param.body);
     return res.status(200).json(responseHelper.Success(item));
   } catch (error) {
-    console.log(error.message);
     return res.status(200).json(responseHelper.Fail());
   }
 };
 
 async function createImageUrl(image, category, userId) {
   var baseUrl = conf.base_url;
-  var imageFolder = conf.folderReview + "/" + category;
-  var imageBaseUrl = baseUrl + "/" + imageFolder;
-  if (image.name == "" || image.name == undefined) {
+  var imageFolder = conf.folderReview + '/' + category;
+  var imageBaseUrl = baseUrl + '/' + imageFolder;
+  if (image.name == '' || image.name == undefined) {
     return {
       imageNull: true,
     };
   }
   var check = {
-    filename: "",
+    filename: '',
   };
   check = await uploadfile.uploadImage(image, userId, imageFolder);
 
@@ -682,6 +686,6 @@ async function createImageUrl(image, category, userId) {
     return check;
   }
 
-  check.filename = imageBaseUrl + "/" + check.filename;
+  check.filename = imageBaseUrl + '/' + check.filename;
   return check;
 }

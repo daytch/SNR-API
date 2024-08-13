@@ -186,13 +186,13 @@ module.exports = function (app) {
   );
 
   // Review
-  // app.post('/user/insertReview', [authJwt.isUser], review.insertReview);
-  app.post(
-    "/user/insertReview",
-    [authJwt.isUser],
-    review.insertReviewWithImages
-  );
-  app.post("/user/getAllReviewbyProduct", review.getAllReviewbyProduct);
+  app.post('/user/insertReview', [authJwt.isUser], review.insertReview);
+  // app.post(
+ //   "/user/insertReview",
+ //   [authJwt.isUser],
+ //   review.insertReviewWithImages
+ // );
+  app.post("/user/getAllReviewbyProduct",[authJwt.isUser], review.getAllReviewbyProduct);
   app.post("/user/countViewReview", [authJwt.isUser], review.countViewReview);
   app.post(
     "/user/countUpvotereview",
@@ -325,6 +325,11 @@ module.exports = function (app) {
   app.post("/user/reportAnswer", [authJwt.isUser], answer.reportAnswer);
 
   app.post("/user/GetQuestionDetails", answer.GetQuestionDetails);
+
+// add by daytch
+  app.post("/user/uploadReviewImage", [authJwt.isUser], image.uploadImage);
+  app.post("/user/insertReviewComment", [authJwt.isUser], review.insertReview);
+  
 
   app.post("/admin/disableAnswer", answer.disableAnswer);
   app.post("/admin/GetAllReportedAnswer", answer.GetAllReportedAnswer);

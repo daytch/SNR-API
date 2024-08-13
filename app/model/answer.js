@@ -54,11 +54,11 @@ exports.isUserhasCountedvote = async (param) => {
   return rows;
 };
 
-exports.deleteCountedVote = async (param) => {
-  var que = `DELETE FROM question_answer_upvotes WHERE id = ${param}`;
-  var rows = await query(que);
+exports.deleteCountedVote = async(param) =>{
+  var que = `DELETE FROM question_answer_upvotes WHERE id = ${param}`
+  var rows = await query(que)
   return rows;
-};
+}
 
 exports.countUpvote = async (param) => {
   var que = "INSERT INTO question_answer_upvotes (userId, questionAnswerId) ";
@@ -164,7 +164,7 @@ exports.getAllQuestionAnswer = async (param) => {
                 question_answers.createdAt,
                 question_answers.description,
                 commented.countedComment,
-                voted.countedVote,
+                IFNULL(voted.countedVote,0) as countedVote,
                 question_answers.questionsId,
                 IF(questions.userId = users.id, 'Creator', '') AS isCreator,
                 question_answers.isAnonymous,
@@ -180,7 +180,7 @@ exports.getAllQuestionAnswer = async (param) => {
                 firstComment.img_avatar as firstComment_img_avatar,
                 firstComment.isCreator as firstComment_isCreator,
                 firstComment.isVoted as firstComment_isVoted,
-                firstComment.countedVote as firstComment_countedVote
+                IFNULL(firstComment.countedVote ,0) as firstComment_countedVote
                 
             FROM question_answers
             JOIN questions ON question_answers.questionsId = questions.id
@@ -266,7 +266,7 @@ exports.getAllQuestionAnswer = async (param) => {
       img_avatar: element.firstComment__img_avatar,
       isCreator: element.firstComment_isCreator,
       isVoted: element.firstComment_isVoted,
-      countedVote: element.firstComment_countedVote,
+      countedVote: element.firstComment_countedVote ==null? 0:element.firstComment_countedVote,
     };
     element["child"] = child;
     console.log(element.userId);
@@ -280,7 +280,7 @@ exports.getAllQuestionAnswer = async (param) => {
       createdAt: element.createdAt,
       description: element.description,
       countedComment: element.countedComment,
-      countedVote: element.countedVote,
+      countedVote: element.countedVote == null? 0:element.countedVote,
       questionsId: element.questionsId,
       isCreator: element.isCreator,
       isAnonymous: element.isAnonymous,
@@ -297,7 +297,7 @@ exports.getAllQuestionAnswer = async (param) => {
         img_avatar: element.firstComment__img_avatar,
         isCreator: element.firstComment_isCreator,
         isVoted: element.firstComment_isVoted,
-        countedVote: element.firstComment_countedVote,
+        countedVote: element.firstComment_countedVote == null? 0:element.firstComment_countedVote,
       },
     });
   });
@@ -314,139 +314,6 @@ exports.getAllQuestionAnswer = async (param) => {
   //     });
 
   // }
-  rowsResult["total"] = countRows[0].total;
-  // rows.total = countRows[0].total;
-  // console.log(rows);
-  return rows;
-};
-
-exports.getQuestionDetails = async () => {
-  var que = `SELECT 
-                DISTINCT
-                users.id as userId,
-                users.name,
-                users_details.img_avatar,
-                question_answers.id as questionAnswerId,
-                IFNULL(countedViews.views,0) as views,
-                question_answers.createdAt,
-                question_answers.description,
-                commented.countedComment,
-                voted.countedVote,
-                question_answers.questionsId,
-                IF(questions.userId = users.id, 'Creator', '') AS isCreator,
-                question_answers.isAnonymous,
-                users.username,
-                !ISNULL(question_answer_upvotes.id) AS isVoted,
-                firstComment.id as firstComment_Id,
-                firstComment.comments as firstComment_Comment,
-                firstComment.createdAt as firstComment_createdAt,
-                firstComment.questionAnswersId as firstComment_questionAnswersId,
-                firstComment.isAnonymous as firstComment_isAnonymous,
-                firstComment.userId as firstComment_userId,
-                firstComment.name as firstComment_name,
-                firstComment.img_avatar as firstComment_img_avatar,
-                firstComment.isCreator as firstComment_isCreator,
-                firstComment.isVoted as firstComment_isVoted,
-                firstComment.countedVote as firstComment_countedVote
-                
-            FROM question_answers
-            JOIN questions ON question_answers.questionsId = questions.id
-            JOIN users ON question_answers.userId = users.id
-            JOIN users_details ON users.id = users_details.userId
-            LEFT JOIN ( SELECT COUNT(id) views, questionAnswerId
-                        FROM question_answer_views
-                        GROUP BY questionAnswerId) countedViews ON question_answers.id = countedViews.questionAnswerId
-            LEFT JOIN (SELECT COUNT(id) AS countedVote, questionAnswerId 
-                    FROM question_answer_upvotes
-                    GROUP BY questionAnswerId) AS voted ON question_answers.id = voted.questionAnswerId
-            LEFT JOIN question_answer_upvotes  ON question_answer_upvotes.questionAnswerId = question_answers.id
-            LEFT JOIN (SELECT COUNT(question_comments.id) AS countedComment, questionAnswersId 
-                    FROM question_comments
-                    JOIN users ON question_comments.userId = users.id 
-                    JOIN users_details ON question_comments.userId = users_details.userId
-                    JOIN question_answers ON question_comments.questionAnswersId = question_answers.id
-                    JOIN questions ON question_answers.questionsId = questions.id
-                    WHERE question_comments.rowStatus = 1
-                    GROUP BY questionAnswersId) as commented ON question_answers.id = commented.questionAnswersId
-            LEFT JOIN(
-                        SELECT question_comments.id, question_comments.comments, question_comments.createdAt, question_comments.questionAnswersId, question_comments.isAnonymous, question_comments.userId, users.name, users_details.img_avatar, 
-                        IF(questions.userId = users.id, 'Creator', '') AS isCreator,
-                        !ISNULL(question_comment_upvotes.id) AS isVoted,
-                        voted.countedVote
-                        FROM question_comments 
-                        JOIN(
-                            SELECT MAX(question_comments.id) as commentId, MAX(createdAt)
-                            FROM question_comments
-                            GROUP BY  questionAnswersId
-                        ) groupedComment ON question_comments.id = groupedComment.commentId
-                        JOIN users ON question_comments.userId = users.id 
-                        JOIN users_details ON question_comments.userId = users_details.userId
-                        JOIN question_answers ON question_comments.questionAnswersId = question_answers.id
-                        JOIN questions ON question_answers.questionsId = questions.id
-                        LEFT JOIN question_comment_upvotes ON question_comments.id = question_comment_upvotes.questionCommentId
-                        LEFT JOIN (SELECT COUNT(id) AS countedVote, questionCommentId 
-                                        FROM question_comment_upvotes
-                                        GROUP BY questionCommentId) AS voted ON question_comments.id = voted.questionCommentId
-                        WHERE question_comments.rowStatus = 1
-            ) AS firstComment ON question_answers.id = firstComment.questionAnswersId`;
-
-  var queryCount = " SELECT COUNT(*) as total FROM ( " + que + ")countTable ";
-  // console.log(que);
-  var countRows = await query(queryCount);
-  var rows = await query(que);
-  console.log(que);
-  var arrayId = "0";
-  var rowsResult = [];
-  await rows.forEach((element) => {
-    // arrayId += "," + element.id
-
-    child = {
-      id: element.firstComment_Id,
-      comments: element.firstComment_Comment,
-      createdAt: element.firstComment_createdAt,
-      questionAnswersId: element.firstComment_questionAnswersId,
-      isAnonymous: element.firstComment_isAnonymous,
-      userId: element.firstComment_userId,
-      name: element.firsctComment_name,
-      img_avatar: element.firstComment__img_avatar,
-      isCreator: element.firstComment_isCreator,
-      isVoted: element.firstComment_isVoted,
-      countedVote: element.firstComment_countedVote,
-    };
-    element["child"] = child;
-    console.log(element.userId);
-    rowsResult.push({
-      userId: element.userId,
-      username: element.username,
-      name: element.name,
-      img_avatar: element.img_avatar,
-      questionAnswerId: element.questionAnswerId,
-      views: element.views,
-      createdAt: element.createdAt,
-      description: element.description,
-      countedComment: element.countedComment,
-      countedVote: element.countedVote,
-      questionsId: element.questionsId,
-      isCreator: element.isCreator,
-      isAnonymous: element.isAnonymous,
-      isVoted: element.isVoted,
-
-      child: {
-        id: element.firstComment_Id,
-        comments: element.firstComment_Comment,
-        createdAt: element.firstComment_createdAt,
-        questionAnswersId: element.firstComment_questionAnswersId,
-        isAnonymous: element.firstComment_isAnonymous,
-        userId: element.firstComment_userId,
-        name: element.firsctComment_name,
-        img_avatar: element.firstComment__img_avatar,
-        isCreator: element.firstComment_isCreator,
-        isVoted: element.firstComment_isVoted,
-        countedVote: element.firstComment_countedVote,
-      },
-    });
-  });
-
   rowsResult["total"] = countRows[0].total;
   // rows.total = countRows[0].total;
   // console.log(rows);

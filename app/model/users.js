@@ -15,7 +15,7 @@ exports.getAllRecord = async (param) => {
     
     var que = "SELECT * FROM " + TableUsers + " WHERE 1=1 ";
     if (param.email != undefined && param.email != "") {
-        que += "AND email = '" + param.email + "' ";
+        que += "AND (email = '" + param.email + "' OR username = '" + param.email + "') ";
     }
     if (param.password != undefined) {
         que += "AND password = '" + param.password + "' ";
@@ -30,6 +30,7 @@ exports.getAllRecord = async (param) => {
 
     console.log("test");
     var rows = await query(que);
+    console.log("find by username or email",rows);
     return rows;
 };
 
@@ -147,7 +148,7 @@ exports.loginUser = function (email, role, res, callback) {
                         WHERE rowStatus = 1
                         GROUP BY userId) answered ON answered.userId = users.id                    
     LEFT JOIN roles ON users_roles.roleId = roles.id
-    WHERE users.email = '${email}' AND users.isActive = 1`
+    WHERE ( users.email = '${email}' OR users.username= '${email}'  )AND users.isActive = 1`
     // if(role != ""){
     //     que += " AND c.name = '" + role + "'";
     // }
@@ -157,6 +158,7 @@ exports.loginUser = function (email, role, res, callback) {
             callback(error, null, res, role);
         }
         else {
+            console.log("check return res",res);
             callback(null, rows, res, role);
         }
     });
@@ -914,23 +916,10 @@ exports.getUsers = async (param) => {
 
 
 exports.followUser = async (param) => {
-    var que = `
- 
-            INSERT INTO follows(userId, userFollowedId, isActive)
-            VALUES(${param.userId}, ${param.userFollowedId}, 1) 
-    `
-    var rows = await query(que);
-    return rows;
-}
-
-exports.checkFollow = async(param)=>{
-    var que = `SELECT * FROM follows WHERE userId = ${param.userId} AND userFollowedId = ${param.userFollowedId}`
-    var rows = await query(que);
-    return rows;
-}
-
-exports.activatedfollowUser = async(param)=>{
-    var que = `UPDATE follows SET isActive = 1 WHERE userId = ${param.userId} AND userFollowedId = ${param.userFollowedId} 
+    var que = `INSERT INTO follows(userId, userFollowedId)
+    VALUES(${param.userId}, ${param.userFollowedId})
+    ON DUPLICATE KEY UPDATE    
+    userId=${param.userId}, userFollowedId = ${param.userFollowedId}, isActive = 1
     `
     var rows = await query(que);
     return rows;

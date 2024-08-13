@@ -52,9 +52,10 @@ exports.inserReviewComment = async (param) => {
 }
 
 exports.getAllReviewbyProduct = async (param) => {
+    console.log(param.userId)
 
-    var que = `SELECT r.id, r.isAnonymous, r.views, IFNULL(reviewVote.voted, 0) as voted, r.description, r.rate, u.name , dtl.img_avatar, r.createdAt, IFNULL(comment.keyword,0) AS searchKeyword, IFNULL(tc.countedComment, 0) as countedComment,
-                    u.id as userId
+    var que = `SELECT r.id, r.isAnonymous, rv.totalView, IFNULL(reviewVote.voted, 0) as voted, r.description, r.rate, u.name , dtl.img_avatar, r.createdAt, IFNULL(comment.keyword,0) AS searchKeyword, IFNULL(tc.countedComment, 0) as countedComment,
+                    u.id as userId, !ISNULL(ru.id) isUpvoted
                 FROM reviews r
                 JOIN users u ON r.userId = u.id
                 LEFT JOIN ( SELECT reviewId, COUNT(id) as keyword FROM review_comments WHERE comment LIKE '%${param.search}%' AND rowStatus =1 GROUP BY reviewId) comment ON comment.reviewId = r.id
@@ -64,6 +65,8 @@ exports.getAllReviewbyProduct = async (param) => {
                 SELECT reviewId, count(id) as countedComment from review_comments WHERE rowStatus = 1
                 GROUP by reviewId
                 ) as tc ON tc.reviewId = r.id
+                LEFT JOIN (SELECT COUNT(userId) as totalView, reviewId FROM review_views GROUP BY reviewId) rv ON rv.reviewId = r.id
+                LEFT JOIN review_upvotes ru ON ru.reviewId = r.id and ru.userId = ${param.userId}
               WHERE  r.productId = `+ param.productId + ` AND r.rowStatus = 1 AND u.isactive = 1 AND dtl.isMute = 0  `
 
     if (param.reviewId !== undefined && param.reviewId != "") {
@@ -79,7 +82,7 @@ exports.getAllReviewbyProduct = async (param) => {
             que += " ORDER by r.createdAt DESC "
             break;
         case "views":
-            que += " ORDER by r.views DESC "
+            que += " ORDER by rv.totalView DESC "
             break;
         case "upvoted":
             que += " ORDER by voted DESC "
@@ -120,6 +123,12 @@ exports.getAllReviewbyProduct = async (param) => {
 
 exports.countView = async (param) => {
     var que = "UPDATE reviews SET views= views+1 WHERE id =" + param.reviewId;
+    var rows = await query(que);
+    return rows;
+}
+
+exports.insertReviewView = async (param) => {
+    var que = `INSERT INTO review_views (reviewId, userId) VALUES (${param.reviewId}, ${param.userId})`
     var rows = await query(que);
     return rows;
 }
@@ -169,11 +178,12 @@ exports.isUserhasCountedvoteReviewComment = async (param) => {
 
 exports.GetallReviewComments = async (param) => {
     var que = `SELECT review_comments.id, review_comments.reviewId, voted.countedVote , review_comments.comment,  review_comments.views,  users.id as userId, users.name, 
-                users_details.img_avatar, review_comments.createdAt, reviews.description
+                users_details.img_avatar, review_comments.createdAt, reviews.description, IF(review_comments_upvote.id IS NULL, false, true) as isVoted
                 FROM review_comments
                 JOIN users ON users.id = review_comments.userId
                 JOIN users_details ON users.id = users_details.userid
                 JOIN reviews ON review_comments.reviewId = reviews.id
+                LEFT JOIN review_comments_upvote ON review_comments_upvote.reviewCommentId = review_comments.id and review_comments_upvote.userId = ${param.userId}
                 LEFT JOIN (SELECT COUNT(id) AS countedVote, reviewCommentId 
                     FROM review_comments_upvote
                     GROUP BY reviewCommentId) AS voted ON review_comments.id = voted.reviewCommentId
@@ -325,6 +335,21 @@ exports.getProductAndReviewUsingReviewId = async (param) => {
     return rows;
 }
 
+
+
+exports.deletCountedVoteReview = async(param)=>{
+    var que= `DELETE FROM review_upvotes WHERE id = ${param} `
+    var rows = await query(que);
+    console.log(rows);
+    return rows;
+}
+
+exports.findCountedViewReview = async(param)=>{
+    var que = `SELECT * FROM review_views WHERE reviewId = ${param.reviewId} AND userId = ${param.userId}`
+    var rows = await query(que);
+    return rows;
+}
+
 exports.getAllReviewReports = async (param) => {
     var que = `SELECT 
             reviews_report.id as reviewReportId,
@@ -355,4 +380,12 @@ exports.getAllReviewReports = async (param) => {
 
     return rows;
 
+}
+
+exports.deleteCountedVoteReviewComment = async (id) => {
+    var que = `DELETE FROM review_comments_upvote WHERE id =${id}`
+
+    var rows = await query(que);
+
+    return rows;
 }

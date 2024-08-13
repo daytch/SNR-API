@@ -110,7 +110,7 @@ exports.notificationFollowUser = async (param) => {
         param.pkey = param.userId;
         var currentUser = await users.getUserDetails(param.fromUserId);
         param.isRead = 0;
-        console.log("test");
+       
         var lastNotif = await notif.getSpecificNotification(param);
         if (lastNotif.length > 0) {
             param.notifId = lastNotif[0].id;
@@ -146,6 +146,33 @@ exports.notificationFollowUser = async (param) => {
     }
 }
 
+exports.notificationAddImage = async (param)=>{
+    try{
+        param.type = "Review-Add_Image"
+        param.pkey = param.productId;
+        var currentProduct = await getProductOnlyById(param.productId);
+        var currentUser = await users.getUserDetails(param.userId);
+        var getNotifyUsers = await users.getNotifyUsers(param);
+        for (let index = 0; index < getNotifyUsers.length; index++) {
+            param.title = (param.isAnonymous?"Anonymous User":currentUser[0].username) + ' added images to your post "' + currentProduct[0].productName + '"';
+            param.categories = currentProduct[0].categoryPath;
+            param.countPeople = 1;
+            param.table = "product";
+            param.userId = getNotifyUsers[index].notifyUserId;
+            var ins = await notif.insertRecord(param);
+            // ins.affectedRows = false;
+            if (ins.affectedRows < 1) {
+               
+            }
+
+        }
+
+    } catch (error) {
+        console.log(error);
+    
+    }
+}
+
 exports.notificationNotifyPostProduct = async (param) => {
     try {
         param.type = "Notify_Me-Post_Product"
@@ -154,7 +181,7 @@ exports.notificationNotifyPostProduct = async (param) => {
         var currentUser = await users.getUserDetails(param.userId);
         var getNotifyUsers = await users.getNotifyUsers(param);
         param.isRead = 0;
-        console.log(getNotifyUsers.length)
+  
         for (let index = 0; index < getNotifyUsers.length; index++) {
             param.title = currentUser[0].username + ' posted a product "' + currentProduct[0].productName + '"';
             param.categories = currentProduct[0].categoryPath;
@@ -182,7 +209,7 @@ exports.notificationNotifyPostReview = async (param) => {
         var currentUser = await users.getUserDetails(param.userId);
         var getNotifyUsers = await users.getNotifyUsers(param);
         param.isRead = 0;
-        console.log(getNotifyUsers.length)
+       
         for (let index = 0; index < getNotifyUsers.length; index++) {
             param.title = currentUser[0].username + ' reviewed a product on "' + currentProduct[0].productName + '"';
             param.categories = currentProduct[0].categoryPath;
@@ -209,7 +236,7 @@ exports.notificationNotifyPoestQuestion = async (param) => {
         var currentUser = await users.getUserDetails(param.userId);
         var getNotifyUsers = await users.getNotifyUsers(param);
         param.isRead = 0;
-        console.log(getNotifyUsers.length)
+
         for (let index = 0; index < getNotifyUsers.length; index++) {
             param.title = currentUser[0].username + ' asked a question "' + currentQuestion[0].questionName + '"';
             param.categories = currentQuestion[0].categoryPath;

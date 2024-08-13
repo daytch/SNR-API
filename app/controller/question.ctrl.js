@@ -42,6 +42,7 @@ exports.insertQuestion = async (param, res) => {
       return res.status(200).json({
         isSuccess: true,
         message: "Success insert data",
+        questionId : ins.insertId
       });
     } else {
       return res.status(200).json({

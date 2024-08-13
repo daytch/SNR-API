@@ -137,7 +137,7 @@ exports.deleteProductImageLike = async(param)=>{
 }
 
 exports.getAllProduct = async (param) => {
-  var que = `SELECT
+  var que = `SELECT DISTINCT
     pro.id ,
     pro.categoryId,
     pro.productName AS title,
@@ -194,34 +194,29 @@ exports.getAllProduct = async (param) => {
       GROUP BY
         productId
     ) productVote ON productVote.productId = pro.id
-    LEFT JOIN (SELECT
-       proImages.productId,
-        imageLink,
-        createdAt
-      FROM
-        product_images proImages
-        JOIN (
-          SELECT
-           MAX(product_images.id) as id,
-            MAX(IFNULL(liked, 0)) AS liked
-          FROM
-            product_images
-            LEFT JOIN (
-              SELECT
-                productImageId,
-                COUNT(id) AS liked
-              FROM
-                product_image_likes
-              GROUP BY
-                productImageId
-            ) imageLiked ON imageLiked.productImageId = product_images.id
-          group BY product_images.productId
-          ORDER BY
-            liked DESC
-            
-          
-        ) productLiked ON productLiked.id = proImages.id
-    ) productLiked ON productLiked.productId = pro.id `;
+    LEFT JOIN (SELECT liked.productId, liked.imageLink, liked.liked FROM 
+      (SELECT productId, id, imagelink,(IFNULL(liked,0)) as liked FROM product_images
+      LEFT JOIN (
+      
+      SELECT COUNT(id) as Liked , productImageId 
+      FROM product_image_likes
+      GROUP BY productImageId ) 
+      image_liked ON product_images.id = image_liked.productImageID
+      order by productId , liked desc)  liked
+      
+      JOIN 
+      
+      (SELECT  MAX(IFNULL(liked,0)) as liked, productId
+      FROM product_images
+      LEFT JOIN (
+      SELECT COUNT(id) as Liked , productImageId 
+      FROM product_image_likes
+      GROUP BY productImageId ) image_liked ON product_images.id = image_liked.productImageID
+      GROUP BY productId) as maxLiked
+      ON liked.productId = maxLiked.productId AND liked.liked = maxLiked.liked
+      order by liked.productId
+      
+      ) productLiked ON productLiked.productId = pro.id `;
   que +=
     "WHERE pro.rowStatus = 1 AND usr.isactive = 1 AND usrdetail.isMute = 0 ";
   console.log(que);
@@ -242,14 +237,14 @@ exports.getAllProduct = async (param) => {
     case "image":
       que += " ORDER by productLiked.createdAt DESC ";
       break;
-    case "upvoted":
-      que += " ORDER by productRate.rate DESC ";
+    case "ratings":
+      que += " ORDER by aveRating DESC ";
       break;
     case "views":
       que += " ORDER by Views DESC ";
       break;
-    case "Date":
-      que += " ORDER by productRate.createdAt DESC ";
+    case "date":
+      que += " ORDER by pro.createdAt DESC ";
       break;
     default:
       break;
